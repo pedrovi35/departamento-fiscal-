@@ -96,7 +96,17 @@ npm install
    lib/supabase/schema.sql
    ```
    
-   c) Copie `.env.local.example` para `.env.local` e preencha:
+   c) Obtenha suas credenciais:
+   - Vá em Settings > API no painel do Supabase
+   - Copie "Project URL" e "anon public" key
+   
+   d) Configure as variáveis de ambiente:
+   ```bash
+   # Copie o arquivo de exemplo
+   cp .env.local.example .env.local
+   ```
+   
+   e) Edite `.env.local` e preencha com suas credenciais:
    ```env
    NEXT_PUBLIC_SUPABASE_URL=sua_url_do_supabase
    NEXT_PUBLIC_SUPABASE_ANON_KEY=sua_chave_anonima
@@ -118,8 +128,13 @@ http://localhost:3000
 
 1. Faça push do código para GitHub/GitLab
 2. Conecte seu repositório no [Vercel](https://vercel.com)
-3. Configure as variáveis de ambiente
+3. **⚠️ IMPORTANTE:** Configure as variáveis de ambiente:
+   - Vá em Settings > Environment Variables
+   - Adicione `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - Marque todos os ambientes (Production, Preview, Development)
 4. Deploy automático!
+
+**Se o build falhar com erro "supabaseUrl is required"**, você esqueceu de configurar as variáveis de ambiente. Volte ao passo 3 e faça um Redeploy.
 
 ### Outras Plataformas
 

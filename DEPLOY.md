@@ -33,17 +33,41 @@ Este guia cobre diversas opções de deploy para o sistema Controle Fiscal.
    - Clique em "Add New Project"
    - Importe seu repositório do GitHub
 
-3. **Configure as variáveis de ambiente**
-   - Na tela de configuração, adicione:
+3. **⚠️ IMPORTANTE: Configure as variáveis de ambiente**
+   
+   **ANTES DE FAZER O DEPLOY**, você DEVE adicionar as variáveis de ambiente:
+   
+   **Opção A - Durante o setup inicial:**
+   - Na tela de configuração do projeto, expanda "Environment Variables"
+   - Adicione as variáveis abaixo
+   
+   **Opção B - Depois do primeiro deploy (se esqueceu):**
+   - Vá em Settings > Environment Variables
+   - Adicione as variáveis
+   - Faça um Redeploy
+   
+   **Variáveis necessárias:**
    ```
-   NEXT_PUBLIC_SUPABASE_URL=sua_url_aqui
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=sua_chave_aqui
+   NEXT_PUBLIC_SUPABASE_URL=https://seuprojetoid.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
    ```
+   
+   **Como obter os valores:**
+   1. Acesse [supabase.com](https://supabase.com) e abra seu projeto
+   2. Vá em Settings > API
+   3. Copie "Project URL" e "anon public" key
+   
+   **Marque todos os ambientes:**
+   - ✅ Production
+   - ✅ Preview  
+   - ✅ Development
 
 4. **Deploy!**
    - Clique em "Deploy"
    - Aguarde 2-3 minutos
    - Pronto! Seu site estará em: `https://seu-projeto.vercel.app`
+   
+   ⚠️ **Se o build falhar com erro "supabaseUrl is required"**, significa que você esqueceu de adicionar as variáveis de ambiente. Volte ao passo 3.
 
 ### Domínio Personalizado
 
