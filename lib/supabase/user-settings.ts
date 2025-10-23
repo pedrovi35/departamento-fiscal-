@@ -7,21 +7,27 @@ import type { UserSettings, UserSettingsFormData, Theme } from '@/types';
  * Obtém configurações do usuário por identificador
  */
 export async function getUserSettings(userIdentifier: string): Promise<UserSettings | null> {
-  const { data, error } = await supabase
-    .from('user_settings')
-    .select('*')
-    .eq('user_identifier', userIdentifier)
-    .single();
+  try {
+    const { data, error } = await supabase
+      .from('user_settings')
+      .select('*')
+      .eq('user_identifier', userIdentifier)
+      .single();
 
-  if (error) {
-    if (error.code === 'PGRST116') {
-      // Usuário não encontrado, retorna configurações padrão
+    if (error) {
+      if (error.code === 'PGRST116') {
+        // Usuário não encontrado, retorna configurações padrão
+        return null;
+      }
+      console.warn('Erro ao buscar configurações do usuário:', error);
       return null;
     }
-    throw error;
-  }
 
-  return data ? mapDbToUserSettings(data) : null;
+    return data ? mapDbToUserSettings(data) : null;
+  } catch (error) {
+    console.warn('Erro geral ao buscar configurações:', error);
+    return null;
+  }
 }
 
 /**
@@ -31,33 +37,49 @@ export async function saveUserSettings(
   userIdentifier: string, 
   settings: Partial<UserSettingsFormData>
 ): Promise<UserSettings> {
-  const dbSettings = mapUserSettingsToDb(settings);
-  
-  const { data, error } = await supabase
-    .from('user_settings')
-    .upsert({
-      user_identifier: userIdentifier,
-      ...dbSettings,
-    })
-    .select()
-    .single();
+  try {
+    const dbSettings = mapUserSettingsToDb(settings);
+    
+    const { data, error } = await supabase
+      .from('user_settings')
+      .upsert({
+        user_identifier: userIdentifier,
+        ...dbSettings,
+      })
+      .select()
+      .single();
 
-  if (error) throw error;
-  return mapDbToUserSettings(data);
+    if (error) {
+      console.warn('Erro ao salvar configurações:', error);
+      // Retorna configurações padrão em caso de erro
+      return getDefaultUserSettings(userIdentifier);
+    }
+    
+    return mapDbToUserSettings(data);
+  } catch (error) {
+    console.warn('Erro geral ao salvar configurações:', error);
+    return getDefaultUserSettings(userIdentifier);
+  }
 }
 
 /**
  * Atualiza apenas o tema do usuário
  */
 export async function updateUserTheme(userIdentifier: string, theme: Theme): Promise<void> {
-  const { error } = await supabase
-    .from('user_settings')
-    .upsert({
-      user_identifier: userIdentifier,
-      theme,
-    });
+  try {
+    const { error } = await supabase
+      .from('user_settings')
+      .upsert({
+        user_identifier: userIdentifier,
+        theme,
+      });
 
-  if (error) throw error;
+    if (error) {
+      console.warn('Erro ao atualizar tema:', error);
+    }
+  } catch (error) {
+    console.warn('Erro geral ao atualizar tema:', error);
+  }
 }
 
 /**

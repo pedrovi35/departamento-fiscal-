@@ -22,8 +22,8 @@ if (hasCredentials) {
       },
     },
   });
-} else if (!isClient) {
-  // Durante o build do servidor, cria um cliente mock para evitar erros
+} else {
+  // Cria um cliente mock para evitar erros quando não há credenciais
   supabase = {
     from: () => ({
       select: () => ({ data: [], error: null }),

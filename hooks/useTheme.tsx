@@ -47,14 +47,19 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
   const [userIdentifier, setUserIdentifier] = useState<string | null>(null);
 
+  // Inicialização segura para evitar problemas de hidratação
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   // Carregar tema do banco de dados
   useEffect(() => {
+    if (!mounted) return;
+    
     const loadTheme = async () => {
       try {
         // Verifica se está no lado do cliente
         if (typeof window === 'undefined') {
-          setThemeState('light');
-          setMounted(true);
           setIsLoading(false);
           return;
         }
@@ -63,44 +68,49 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         setUserIdentifier(identifier);
         
         // Primeiro tenta carregar do banco de dados
-        const userSettings = await getUserSettings(identifier);
-        
-        if (userSettings) {
-          setThemeState(userSettings.theme);
-        } else {
-          // Se não existe, detecta preferência do sistema
-          const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-          setThemeState(systemTheme);
+        try {
+          const userSettings = await getUserSettings(identifier);
           
-          // Salva configurações padrão no banco
-          await saveUserSettings(identifier, {
-            theme: systemTheme,
-            language: 'pt-BR',
-            timezone: 'America/Sao_Paulo',
-            dateFormat: 'DD/MM/YYYY',
-            timeFormat: '24h',
-            notificationsEnabled: true,
-            emailNotifications: false,
-            reminderDays: 7,
-            dashboardLayout: {},
-            savedFilters: {},
-          });
+          if (userSettings) {
+            setThemeState(userSettings.theme);
+          } else {
+            // Se não existe, detecta preferência do sistema
+            const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            setThemeState(systemTheme);
+            
+            // Salva configurações padrão no banco
+            await saveUserSettings(identifier, {
+              theme: systemTheme,
+              language: 'pt-BR',
+              timezone: 'America/Sao_Paulo',
+              dateFormat: 'DD/MM/YYYY',
+              timeFormat: '24h',
+              notificationsEnabled: true,
+              emailNotifications: false,
+              reminderDays: 7,
+              dashboardLayout: {},
+              savedFilters: {},
+            });
+          }
+        } catch (dbError) {
+          console.warn('Erro ao carregar tema do banco:', dbError);
+          // Fallback para preferência do sistema
+          if (typeof window !== 'undefined') {
+            const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            setThemeState(systemTheme);
+          }
         }
       } catch (error) {
-        console.warn('Erro ao carregar tema do banco:', error);
-        // Fallback para preferência do sistema
-        if (typeof window !== 'undefined') {
-          const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-          setThemeState(systemTheme);
-        }
+        console.warn('Erro geral ao carregar tema:', error);
+        // Fallback para tema claro
+        setThemeState('light');
       } finally {
-        setMounted(true);
         setIsLoading(false);
       }
     };
 
     loadTheme();
-  }, []);
+  }, [mounted]);
 
   // Aplicar tema ao DOM
   useEffect(() => {
