@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import { ThemeProvider } from '@/hooks/useTheme'
 
 export const metadata: Metadata = {
   title: 'Controle Fiscal - Gerenciamento de Prazos',
@@ -13,8 +14,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-BR">
-      <body>{children}</body>
+      <body>
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
+      </body>
     </html>
   )
 }
+
+
 

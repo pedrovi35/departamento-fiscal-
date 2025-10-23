@@ -11,11 +11,11 @@ export function PageHeader({ title, description, action }: PageHeaderProps) {
     <div className="mb-6 md:mb-8">
       <div className="flex items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100">
             {title}
           </h1>
           {description && (
-            <p className="mt-1 text-gray-600">
+            <p className="mt-1 text-gray-600 dark:text-gray-400">
               {description}
             </p>
           )}
@@ -29,4 +29,5 @@ export function PageHeader({ title, description, action }: PageHeaderProps) {
     </div>
   );
 }
+
 

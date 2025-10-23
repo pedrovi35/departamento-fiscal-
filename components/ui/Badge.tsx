@@ -14,11 +14,11 @@ export function Badge({ children, variant = 'default', size = 'md' }: BadgeProps
         'inline-flex items-center rounded-full font-medium',
         {
           // Variants
-          'bg-yellow-100 text-yellow-800': variant === 'pending',
-          'bg-blue-100 text-blue-800': variant === 'in_progress',
-          'bg-green-100 text-green-800': variant === 'completed',
-          'bg-red-100 text-red-800': variant === 'overdue',
-          'bg-gray-100 text-gray-800': variant === 'default',
+          'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300': variant === 'pending',
+          'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300': variant === 'in_progress',
+          'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300': variant === 'completed',
+          'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300': variant === 'overdue',
+          'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300': variant === 'default',
           // Sizes
           'px-2 py-0.5 text-xs': size === 'sm',
           'px-3 py-1 text-sm': size === 'md',
@@ -39,4 +39,5 @@ export function getStatusLabel(status: ObligationStatus): string {
   };
   return labels[status] || status;
 }
+
 

@@ -195,3 +195,4 @@ Reporte bugs em: [GitHub Issues]
 **Licença**: Open Source
 **Última atualização**: Janeiro 2024
 
+

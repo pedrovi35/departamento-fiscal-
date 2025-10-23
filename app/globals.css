@@ -8,6 +8,12 @@
   --background-end-rgb: 255, 255, 255;
 }
 
+.dark {
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 15, 23, 42;
+  --background-end-rgb: 15, 23, 42;
+}
+
 body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
@@ -21,6 +27,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 @layer utilities {
@@ -33,6 +40,10 @@ body {
 .focus-visible:focus {
   outline: 2px solid #0ea5e9;
   outline-offset: 2px;
+}
+
+.dark .focus-visible:focus {
+  outline: 2px solid #38bdf8;
 }
 
 /* Animações suaves */
@@ -50,12 +61,26 @@ body {
   background: #f1f1f1;
 }
 
+.dark ::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+
 ::-webkit-scrollbar-thumb {
   background: #888;
   border-radius: 4px;
 }
 
+.dark ::-webkit-scrollbar-thumb {
+  background: #64748b;
+}
+
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+
 

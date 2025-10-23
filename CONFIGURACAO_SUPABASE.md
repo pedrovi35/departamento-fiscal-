@@ -223,3 +223,4 @@ CREATE INDEX idx_obligations_client_date
 
 Agora você está pronto para usar o sistema completo.
 
+

@@ -83,3 +83,4 @@ export class RealtimeManager {
 // Instância singleton
 export const realtimeManager = new RealtimeManager();
 
+

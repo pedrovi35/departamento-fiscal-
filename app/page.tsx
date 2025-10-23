@@ -6,6 +6,7 @@ import { PageHeader } from '@/components/Layout/PageHeader';
 import { Card, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Badge, getStatusLabel } from '@/components/ui/Badge';
 import { RealtimeIndicator } from '@/components/RealtimeIndicator';
+import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { getClients, getObligations, getTaxes } from '@/lib/supabase/database';
 import { calculateDashboardStats, getObligationsWithDetails, getCriticalObligations, getThisWeekObligations } from '@/lib/dashboard-utils';
 import { formatDate, getRelativeDateDescription } from '@/lib/date-utils';
@@ -46,12 +47,12 @@ export default function DashboardPage() {
   
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
         <Navigation />
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center py-12">
             <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-            <p className="mt-4 text-gray-600">Carregando...</p>
+            <p className="mt-4 text-gray-600 dark:text-gray-400">Carregando...</p>
           </div>
         </main>
       </div>
@@ -59,60 +60,63 @@ export default function DashboardPage() {
   }
   
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
       <Navigation />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <PageHeader
-          title="Dashboard"
-          description="Visão geral do status das obrigações fiscais"
-        />
+        <div className="flex items-center justify-between mb-8">
+          <PageHeader
+            title="Dashboard"
+            description="Visão geral do status das obrigações fiscais"
+          />
+          <ThemeToggle />
+        </div>
         
         {/* Estatísticas */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <Card>
             <div className="flex items-center gap-4">
-              <div className="p-3 bg-blue-100 rounded-lg">
-                <Users className="w-6 h-6 text-blue-600" />
+              <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                <Users className="w-6 h-6 text-blue-600 dark:text-blue-400" />
               </div>
               <div>
-                <p className="text-sm text-gray-600">Clientes Ativos</p>
-                <p className="text-2xl font-bold text-gray-900">{stats?.activeClients || 0}</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Clientes Ativos</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{stats?.activeClients || 0}</p>
               </div>
             </div>
           </Card>
           
           <Card>
             <div className="flex items-center gap-4">
-              <div className="p-3 bg-yellow-100 rounded-lg">
-                <Clock className="w-6 h-6 text-yellow-600" />
+              <div className="p-3 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg">
+                <Clock className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
               </div>
               <div>
-                <p className="text-sm text-gray-600">Pendentes</p>
-                <p className="text-2xl font-bold text-gray-900">{stats?.pendingObligations || 0}</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Pendentes</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{stats?.pendingObligations || 0}</p>
               </div>
             </div>
           </Card>
           
           <Card>
             <div className="flex items-center gap-4">
-              <div className="p-3 bg-green-100 rounded-lg">
-                <CheckCircle className="w-6 h-6 text-green-600" />
+              <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-lg">
+                <CheckCircle className="w-6 h-6 text-green-600 dark:text-green-400" />
               </div>
               <div>
-                <p className="text-sm text-gray-600">Concluídas (mês)</p>
-                <p className="text-2xl font-bold text-gray-900">{stats?.completedThisMonth || 0}</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Concluídas (mês)</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{stats?.completedThisMonth || 0}</p>
               </div>
             </div>
           </Card>
           
           <Card>
             <div className="flex items-center gap-4">
-              <div className="p-3 bg-red-100 rounded-lg">
-                <AlertCircle className="w-6 h-6 text-red-600" />
+              <div className="p-3 bg-red-100 dark:bg-red-900/30 rounded-lg">
+                <AlertCircle className="w-6 h-6 text-red-600 dark:text-red-400" />
               </div>
               <div>
-                <p className="text-sm text-gray-600">Atrasadas</p>
-                <p className="text-2xl font-bold text-gray-900">{stats?.overdueObligations || 0}</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Atrasadas</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{stats?.overdueObligations || 0}</p>
               </div>
             </div>
           </Card>
@@ -126,7 +130,7 @@ export default function DashboardPage() {
             </CardHeader>
             
             {criticalObligations.length === 0 ? (
-              <p className="text-gray-500 text-center py-8">
+              <p className="text-gray-500 dark:text-gray-400 text-center py-8">
                 Nenhuma obrigação crítica no momento 🎉
               </p>
             ) : (
@@ -134,17 +138,17 @@ export default function DashboardPage() {
                 {criticalObligations.slice(0, 5).map((obligation) => (
                   <div
                     key={obligation.id}
-                    className="p-3 border border-gray-200 rounded-lg hover:border-primary-300 transition-smooth"
+                    className="p-3 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-primary-300 dark:hover:border-primary-600 transition-smooth"
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex-1 min-w-0">
-                        <p className="font-medium text-gray-900 truncate">
+                        <p className="font-medium text-gray-900 dark:text-gray-100 truncate">
                           {obligation.tax?.name || 'Imposto'}
                         </p>
-                        <p className="text-sm text-gray-600 truncate">
+                        <p className="text-sm text-gray-600 dark:text-gray-400 truncate">
                           {obligation.client?.name || 'Cliente'}
                         </p>
-                        <p className="text-sm text-gray-500 mt-1">
+                        <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">
                           {getRelativeDateDescription(obligation.dueDate)}
                         </p>
                       </div>
@@ -165,7 +169,7 @@ export default function DashboardPage() {
             </CardHeader>
             
             {weekObligations.length === 0 ? (
-              <p className="text-gray-500 text-center py-8">
+              <p className="text-gray-500 dark:text-gray-400 text-center py-8">
                 Nenhuma obrigação vencendo esta semana
               </p>
             ) : (
@@ -173,22 +177,22 @@ export default function DashboardPage() {
                 {weekObligations.slice(0, 5).map((obligation) => (
                   <div
                     key={obligation.id}
-                    className="p-3 border border-gray-200 rounded-lg hover:border-primary-300 transition-smooth"
+                    className="p-3 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-primary-300 dark:hover:border-primary-600 transition-smooth"
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex-1 min-w-0">
-                        <p className="font-medium text-gray-900 truncate">
+                        <p className="font-medium text-gray-900 dark:text-gray-100 truncate">
                           {obligation.tax?.name || 'Imposto'}
                         </p>
-                        <p className="text-sm text-gray-600 truncate">
+                        <p className="text-sm text-gray-600 dark:text-gray-400 truncate">
                           {obligation.client?.name || 'Cliente'}
                         </p>
-                        <p className="text-sm text-gray-500 mt-1">
+                        <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">
                           {formatDate(obligation.dueDate)}
                         </p>
                       </div>
                       {obligation.assignedTo && (
-                        <span className="text-xs text-gray-500">
+                        <span className="text-xs text-gray-500 dark:text-gray-400">
                           {obligation.assignedTo}
                         </span>
                       )}
