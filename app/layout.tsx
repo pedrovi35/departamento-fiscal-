@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import { ThemeProvider } from '@/hooks/useTheme'
+import { ErrorBoundary } from '@/components/ErrorBoundary'
 
 export const metadata: Metadata = {
   title: 'Controle Fiscal - Gerenciamento de Prazos',
@@ -15,9 +16,11 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body>
-        <ThemeProvider>
-          {children}
-        </ThemeProvider>
+        <ErrorBoundary>
+          <ThemeProvider>
+            {children}
+          </ThemeProvider>
+        </ErrorBoundary>
       </body>
     </html>
   )
