@@ -150,6 +150,15 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 export function useTheme() {
   const context = useContext(ThemeContext);
   if (context === undefined) {
+    // Durante o build estático, retorna valores padrão
+    if (typeof window === 'undefined') {
+      return {
+        theme: 'light' as Theme,
+        toggleTheme: () => {},
+        setTheme: () => {},
+        isLoading: false,
+      };
+    }
     throw new Error('useTheme must be used within a ThemeProvider');
   }
   return context;
