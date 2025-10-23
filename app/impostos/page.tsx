@@ -14,7 +14,7 @@ import { getTaxes, saveTax, deleteTax } from '@/lib/supabase/database';
 import { getRecurrenceDescription } from '@/lib/recurrence-utils';
 import { useRealtimeRefresh } from '@/hooks/useRealtime';
 import { Plus, Edit2, Trash2, Filter, Tag } from 'lucide-react';
-import type { Tax, RecurrenceType, RecurrenceRule, WeekendAdjustRule } from '@/types';
+import type { Tax, RecurrenceType, RecurrenceRule, WeekendAdjustRule, TaxCategory } from '@/types';
 
 export default function ImpostosPage() {
   const [taxes, setTaxes] = useState<Tax[]>([]);
@@ -25,7 +25,7 @@ export default function ImpostosPage() {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
-    category: 'Federal',
+    category: 'Federal' as TaxCategory,
     recurrenceType: 'monthly' as RecurrenceType,
     dayOfMonth: 15,
     customDays: [] as number[],
@@ -58,7 +58,7 @@ export default function ImpostosPage() {
     setFormData({
       name: '',
       description: '',
-      category: 'Federal',
+      category: 'Federal' as TaxCategory,
       recurrenceType: 'monthly',
       dayOfMonth: 15,
       customDays: [],
@@ -77,11 +77,11 @@ export default function ImpostosPage() {
       name: tax.name,
       description: tax.description || '',
       category: tax.category,
-      recurrenceType: tax.recurrenceRule.type,
-      dayOfMonth: tax.recurrenceRule.dayOfMonth || 15,
-      customDays: tax.recurrenceRule.customDays || [],
-      interval: tax.recurrenceRule.interval || 30,
-      months: tax.recurrenceRule.months || [],
+      recurrenceType: tax.recurrenceType,
+      dayOfMonth: tax.recurrenceConfig?.dayOfMonth || 15,
+      customDays: tax.recurrenceConfig?.customDays || [],
+      interval: tax.recurrenceConfig?.interval || 30,
+      months: tax.recurrenceConfig?.months || [],
       weekendAdjust: tax.weekendAdjust,
       defaultAssignee: tax.defaultAssignee || '',
       autoGenerate: tax.autoGenerate,
@@ -109,7 +109,14 @@ export default function ImpostosPage() {
         name: formData.name.trim(),
         description: formData.description.trim() || undefined,
         category: formData.category,
-        recurrenceRule,
+        recurrenceType: formData.recurrenceType,
+        recurrenceConfig: {
+          type: formData.recurrenceType,
+          dayOfMonth: formData.dayOfMonth,
+          customDays: formData.customDays,
+          interval: formData.interval,
+          months: formData.months,
+        },
         weekendAdjust: formData.weekendAdjust,
         defaultAssignee: formData.defaultAssignee.trim() || undefined,
         autoGenerate: formData.autoGenerate,
@@ -248,7 +255,7 @@ export default function ImpostosPage() {
                       <div>
                         <span className="text-gray-500">Recorrência:</span>
                         <span className="ml-2 font-medium">
-                          {getRecurrenceDescription(tax.recurrenceRule)}
+                          {getRecurrenceDescription(tax.recurrenceConfig || { type: tax.recurrenceType })}
                         </span>
                       </div>
                       <div>
@@ -322,7 +329,7 @@ export default function ImpostosPage() {
           <Select
             label="Categoria"
             value={formData.category}
-            onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+            onChange={(e) => setFormData({ ...formData, category: e.target.value as TaxCategory })}
             options={[
               { value: 'Federal', label: 'Federal' },
               { value: 'Estadual', label: 'Estadual' },

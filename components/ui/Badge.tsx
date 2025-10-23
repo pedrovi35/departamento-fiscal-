@@ -36,6 +36,7 @@ export function getStatusLabel(status: ObligationStatus): string {
     in_progress: 'Em Andamento',
     completed: 'Concluída',
     overdue: 'Atrasada',
+    cancelled: 'Cancelada',
   };
   return labels[status] || status;
 }

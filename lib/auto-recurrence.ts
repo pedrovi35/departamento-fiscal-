@@ -69,7 +69,7 @@ async function generateRecurrencesForTax(tax: Tax, obligations: Obligation[]): P
       // Gera próxima ocorrência
       const nextDueDate = await getNextDueDate(
         lastObligation.dueDate,
-        tax.recurrenceRule,
+        tax.recurrenceConfig || { type: tax.recurrenceType },
         tax.weekendAdjust
       );
       
@@ -111,7 +111,7 @@ export async function generateFutureOccurrences(
   for (let i = 0; i < count; i++) {
     currentDate = await getNextDueDate(
       currentDate,
-      tax.recurrenceRule,
+      tax.recurrenceConfig || { type: tax.recurrenceType },
       tax.weekendAdjust
     );
     

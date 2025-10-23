@@ -14,7 +14,7 @@ import { getObligations, saveObligation, updateObligationStatus, deleteObligatio
 import { formatDate, getRelativeDateDescription, isOverdue } from '@/lib/date-utils';
 import { useRealtimeRefresh } from '@/hooks/useRealtime';
 import { Plus, Filter, PlayCircle, CheckCircle, Trash2, Calendar, User } from 'lucide-react';
-import type { Obligation, Client, Tax, ObligationStatus } from '@/types';
+import type { Obligation, Client, Tax, ObligationStatus, PriorityLevel } from '@/types';
 
 export default function ObrigacoesPage() {
   const [obligations, setObligations] = useState<Obligation[]>([]);
@@ -35,7 +35,7 @@ export default function ObrigacoesPage() {
     clientId: '',
     assignedTo: '',
     dueDate: '',
-    priority: 'medium' as 'low' | 'medium' | 'high',
+    priority: 'medium' as PriorityLevel,
     notes: '',
   });
   
