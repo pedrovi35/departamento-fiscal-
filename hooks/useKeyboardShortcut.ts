@@ -14,6 +14,11 @@ export function useKeyboardShortcut(
   } = {}
 ) {
   useEffect(() => {
+    // Verifica se está no lado do cliente
+    if (typeof window === 'undefined') {
+      return;
+    }
+
     const handleKeyDown = (event: KeyboardEvent) => {
       const { ctrl = false, alt = false, shift = false, meta = false } = modifiers;
       

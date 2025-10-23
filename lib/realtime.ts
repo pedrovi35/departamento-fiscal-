@@ -28,7 +28,7 @@ export class RealtimeManager {
       .on(
         'postgres_changes',
         { event: 'INSERT', schema: 'public', table },
-        (payload) => {
+        (payload: any) => {
           console.log(`[${table}] INSERT:`, payload);
           onInsert?.(payload);
         }
@@ -36,7 +36,7 @@ export class RealtimeManager {
       .on(
         'postgres_changes',
         { event: 'UPDATE', schema: 'public', table },
-        (payload) => {
+        (payload: any) => {
           console.log(`[${table}] UPDATE:`, payload);
           onUpdate?.(payload);
         }
@@ -44,12 +44,12 @@ export class RealtimeManager {
       .on(
         'postgres_changes',
         { event: 'DELETE', schema: 'public', table },
-        (payload) => {
+        (payload: any) => {
           console.log(`[${table}] DELETE:`, payload);
           onDelete?.(payload);
         }
       )
-      .subscribe((status) => {
+      .subscribe((status: any) => {
         console.log(`[${table}] Status da inscrição:`, status);
       });
     

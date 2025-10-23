@@ -12,15 +12,17 @@ interface ModalProps {
 
 export function Modal({ isOpen, onClose, title, children, size = 'md' }: ModalProps) {
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
+    if (typeof document !== 'undefined') {
+      if (isOpen) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = 'unset';
+      }
+      
+      return () => {
+        document.body.style.overflow = 'unset';
+      };
     }
-    
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
   }, [isOpen]);
   
   useEffect(() => {
@@ -30,12 +32,14 @@ export function Modal({ isOpen, onClose, title, children, size = 'md' }: ModalPr
       }
     };
     
-    if (isOpen) {
+    if (isOpen && typeof window !== 'undefined') {
       window.addEventListener('keydown', handleEscape);
     }
     
     return () => {
-      window.removeEventListener('keydown', handleEscape);
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('keydown', handleEscape);
+      }
     };
   }, [isOpen, onClose]);
   

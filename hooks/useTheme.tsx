@@ -15,6 +15,11 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 // Função para gerar identificador único do usuário
 function getUserIdentifier(): string {
+  // Verifica se está no lado do cliente
+  if (typeof window === 'undefined') {
+    return 'server-side';
+  }
+  
   // Tenta obter do localStorage primeiro
   let identifier = localStorage.getItem('user_identifier');
   
@@ -46,6 +51,14 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const loadTheme = async () => {
       try {
+        // Verifica se está no lado do cliente
+        if (typeof window === 'undefined') {
+          setThemeState('light');
+          setMounted(true);
+          setIsLoading(false);
+          return;
+        }
+
         const identifier = getUserIdentifier();
         setUserIdentifier(identifier);
         
@@ -76,8 +89,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       } catch (error) {
         console.warn('Erro ao carregar tema do banco:', error);
         // Fallback para preferência do sistema
-        const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-        setThemeState(systemTheme);
+        if (typeof window !== 'undefined') {
+          const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          setThemeState(systemTheme);
+        }
       } finally {
         setMounted(true);
         setIsLoading(false);
@@ -89,7 +104,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   // Aplicar tema ao DOM
   useEffect(() => {
-    if (mounted) {
+    if (mounted && typeof window !== 'undefined') {
       const root = document.documentElement;
       if (theme === 'dark') {
         root.classList.add('dark');
